@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+    />
+    <!-- style.css -->
+    <link rel="stylesheet" href="style.css" />
+    <title>voice search bar</title>
+  </head>
+  <body>
+    <div class="search-bar">
+      <!-- Dropdown for selecting categories -->
+      <div class="dropdown">
+        <div id="drop-text" class="dropdown-text">
+          <span id="span">Everything</span>
+          <i id="icon" class="fa-solid fa-chevron-down"></i>
+        </div>
+        <ul id="list" class="dropdown-list">
+          <li class="dropdown-list-item">ALL</li>
+          <li class="dropdown-list-item">Software development</li>
+          <li class="dropdown-list-item">Web development</li>
+          <li class="dropdown-list-item">Data Analyst</li>
+          <li class="dropdown-list-item">IT Consultant</li>
+          <li class="dropdown-list-item">Network administrator</li>
+        </ul>
+      </div>
+
+      <!-- Search box with clear button -->
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search" />
+        <button id="search-button" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button id="voice-search" aria-label="Start Voice Search">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <i id="clear-button" class="fa-solid fa-times"></i>
+      </div>
+    </div>
+
+    <!-- Toggle for dark mode -->
+    <button id="theme-toggle" class="theme-toggle-btn">
+      <i class="fa-solid fa-sun" id="toggle-icon"></i> 
+    </button>
+
+    <script src="script.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const voiceSearchButton = document.getElementById('voice-search');
+          const searchInput = document.getElementById('search-input');
+          const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          
+          if (recognition) {
+              const speechRecognition = new recognition();
+              speechRecognition.lang = 'en-US';
+              speechRecognition.interimResults = false;
+              speechRecognition.maxAlternatives = 1;
+  
+              voiceSearchButton.addEventListener('click', () => {
+                  speechRecognition.start();
+              });
+  
+              speechRecognition.addEventListener('result', (event) => {
+                  const transcript = event.results[0][0].transcript;
+                  searchInput.value = transcript;
+              });
+  
+              speechRecognition.addEventListener('error', (event) => {
+                  console.error('Speech recognition error:', event.error);
+              });
+  
+              speechRecognition.addEventListener('end', () => {
+                  console.log('Speech recognition service disconnected');
+              });
+          } else {
+              console.warn('SpeechRecognition not supported');
+              voiceSearchButton.disabled = true; // Disable button if speech recognition is not supported
+          }
+      });
+  </script>
+  
+  
+  </body>
+</html>
